@@ -11,7 +11,7 @@ Application developed for the user to write down his daily tasks
 
 ## What I learned from this project?
 - How to create and use global variables
-- Use action
+- Use button action
 - Introduce how to use alert actions
 - Introduce how to insert text fields and store the data entered by the user
 
