@@ -27,10 +27,16 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     @objc private func didTapAdd() {
         let alert = UIAlertController(title: "New Item", message: "Enter new to do list", preferredStyle: .alert)
-        
+        alert.addTextField{ field in
+            field.placeholder = "Enter item.."
+        }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Done", style: .default, handler: {
-            () in
+        alert.addAction(UIAlertAction(title: "Done", style: .default, handler: { (_) in
+            if let field = alert.textFields?.first {
+                if let text = field.text, !text.isEmpty {
+                    print(text)
+                }
+            }
         }))
         
         present(alert, animated: true)
