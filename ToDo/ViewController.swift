@@ -14,9 +14,12 @@ class ViewController: UIViewController, UITableViewDataSource {
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         return table
     }()
+    
+    var items = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.items = UserDefaults.standard.stringArray(forKey: "items") ?? []
         title = "To do List"
         view.addSubview(table)
         table.dataSource = self
@@ -31,10 +34,16 @@ class ViewController: UIViewController, UITableViewDataSource {
             field.placeholder = "Enter item.."
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Done", style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: "Done", style: .default, handler: { [weak self] (_) in
             if let field = alert.textFields?.first {
                 if let text = field.text, !text.isEmpty {
-                    print(text)
+                    
+                    DispatchQueue.main.async {
+                        let newEntry = [text]
+                        UserDefaults.standard.setValue(newEntry, forKey: "items")
+                        self?.items.append(text)
+                        self?.table.reloadData()
+                    }
                 }
             }
         }))
@@ -48,11 +57,12 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = items[indexPath.row]
         return cell
     }
 }
